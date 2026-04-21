@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ОбщМаркет — Главная</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#F5F4EF;min-height:100vh;display:flex;flex-direction:column}
+.page{display:flex;flex-direction:column;min-height:100vh}
+.navbar{background:#fff;border-bottom:0.5px solid #e5e3db;padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.nav-logo{font-size:15px;font-weight:500;color:#111}.nav-logo span{color:#534AB7}
+.nav-right{display:flex;align-items:center;gap:8px}
+.btn-ghost{padding:6px 12px;border:0.5px solid #c8c6bc;border-radius:8px;background:transparent;font-size:13px;color:#111;cursor:pointer}
+.btn-ghost:hover{background:#f1efe8}
+.btn-primary{padding:6px 14px;border:none;border-radius:8px;background:#534AB7;font-size:13px;color:#EEEDFE;cursor:pointer}
+.btn-primary:hover{opacity:.88}
+.notif-btn{position:relative;padding:6px 10px;border:0.5px solid #c8c6bc;border-radius:8px;background:transparent;cursor:pointer;display:flex;align-items:center}
+.notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#E24B4A}
+.search-bar{background:#fff;border-bottom:0.5px solid #e5e3db;padding:10px 16px;display:flex;gap:8px;align-items:center}
+.search-wrap{flex:1;position:relative}
+.search-wrap input{width:100%;padding:8px 12px 8px 34px;border:0.5px solid #c8c6bc;border-radius:8px;font-size:13px;background:#f5f4ef;color:#111}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.35;pointer-events:none}
+.type-sel{width:130px;flex-shrink:0;padding:8px 10px;border:0.5px solid #c8c6bc;border-radius:8px;font-size:13px;background:#f5f4ef;color:#111;cursor:pointer}
+.body{display:flex;flex:1}
+.sidebar{width:188px;flex-shrink:0;background:#fff;border-right:0.5px solid #e5e3db;padding:16px 14px;display:flex;flex-direction:column;gap:20px}
+.sb-title{font-size:11px;font-weight:500;color:#888780;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.chip-list{display:flex;flex-direction:column;gap:4px}
+.chip{padding:6px 10px;border-radius:8px;font-size:13px;color:#5F5E5A;cursor:pointer;background:transparent;border:none;text-align:left;width:100%}
+.chip:hover{background:#f5f4ef;color:#111}
+.chip.active{background:#EEEDFE;color:#3C3489;font-weight:500}
+.sort-list{display:flex;flex-direction:column;gap:6px}
+.sort-row{display:flex;flex-direction:column;gap:4px}
+.sort-row label{font-size:11px;color:#888780}
+.sort-row select{width:100%;padding:6px 8px;border:0.5px solid #c8c6bc;border-radius:8px;font-size:12px;background:#f5f4ef;color:#111;cursor:pointer}
+.sort-row select.on{border-color:#AFA9EC;color:#534AB7;background:#EEEDFE}
+.price-inputs{display:flex;gap:6px;margin-bottom:10px}
+.price-inputs input{width:0;flex:1;padding:6px 8px;border:0.5px solid #c8c6bc;border-radius:8px;font-size:12px;background:#f5f4ef;color:#111;min-width:0}
+.price-sep{font-size:12px;color:#888780;align-self:center;flex-shrink:0}
+.range-wrap{position:relative;height:20px;margin:0 2px}
+.range-track{position:absolute;top:50%;transform:translateY(-50%);left:0;right:0;height:3px;border-radius:2px;background:#e5e3db}
+.range-fill{position:absolute;top:50%;transform:translateY(-50%);height:3px;border-radius:2px;background:#534AB7}
+.range-wrap input[type=range]{position:absolute;width:100%;top:50%;transform:translateY(-50%);appearance:none;-webkit-appearance:none;background:transparent;pointer-events:none;height:16px}
+.range-wrap input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#534AB7;border:2px solid #fff;cursor:pointer;pointer-events:all;box-shadow:0 0 0 1px #AFA9EC}
+.price-labels{display:flex;justify-content:space-between;margin-top:6px}
+.price-labels span{font-size:11px;color:#888780}
+.sb-reset{padding:7px;border:0.5px solid #c8c6bc;border-radius:8px;background:transparent;font-size:12px;color:#5F5E5A;cursor:pointer;width:100%}
+.sb-reset:hover{background:#f5f4ef}
+.main{flex:1;min-width:0;padding:14px 16px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+.count{font-size:12px;color:#888780}
+.active-filters{display:flex;gap:5px;flex-wrap:wrap}
+.filter-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;background:#EEEDFE;color:#3C3489;border:0.5px solid #AFA9EC}
+.filter-tag button{background:none;border:none;cursor:pointer;color:#534AB7;font-size:12px;line-height:1;padding:0 0 0 2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px}
+.card{background:#fff;border:0.5px solid #e5e3db;border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.card:hover{border-color:#888780}
+.card-img{width:100%;height:108px;background:#f5f4ef;display:flex;align-items:center;justify-content:center;position:relative}
+.card-img svg{opacity:.15}
+.type-badge{position:absolute;top:7px;left:7px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
+.card-body{padding:9px 10px 11px}
+.card-cat{font-size:11px;color:#888780;margin-bottom:2px}
+.card-title{font-size:12px;font-weight:500;color:#111;margin-bottom:5px;line-height:1.35}
+.card-price{font-size:13px;font-weight:500;color:#0F6E56}
+.card-price.free{color:#888780;font-size:12px;font-weight:400}
+.card-meta{margin-top:6px;display:flex;align-items:center;justify-content:space-between}
+.avatar-xs{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;flex-shrink:0}
+.card-author{display:flex;align-items:center;gap:4px}
+.card-author-name{font-size:11px;color:#5F5E5A}
+.card-date{font-size:11px;color:#888780}
+.empty{padding:48px;text-align:center;color:#888780;font-size:13px;grid-column:1/-1}
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="navbar">
+    <div class="nav-logo">Общ<span>Маркет</span></div>
+    <div class="nav-right">
+      <button class="notif-btn">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1a5 5 0 0 1 5 5v2.5l1 2H2l1-2V6a5 5 0 0 1 5-5z"/><path d="M6.5 13a1.5 1.5 0 0 0 3 0"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="btn-ghost" onclick="window.location.href='login_page.html'">Войти</button>
+      <button class="btn-primary">+ Разместить</button>
+    </div>
+  </nav>
+
+  <div class="search-bar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10 10l3.5 3.5"/></svg>
+      <input type="text" id="search-input" placeholder="Поиск по объявлениям..." oninput="applyFilters()">
+    </div>
+    <select class="type-sel" id="type-sel" onchange="applyFilters()">
+      <option value="">Все типы</option>
+      <option value="sell">Продам</option>
+      <option value="rent">Аренда</option>
+      <option value="service_offer">Предлагаю услугу</option>
+    </select>
+  </div>
+
+  <div class="body">
+    <aside class="sidebar">
+      <div>
+        <div class="sb-title">Категория</div>
+        <div class="chip-list">
+          <button class="chip active" onclick="setCat(this,'')">Все</button>
+          <button class="chip" onclick="setCat(this,'clothes')">Вещи / одежда</button>
+          <button class="chip" onclick="setCat(this,'electronics')">Электроника</button>
+          <button class="chip" onclick="setCat(this,'study')">Учёба</button>
+          <button class="chip" onclick="setCat(this,'services')">Услуги</button>
+          <button class="chip" onclick="setCat(this,'food')">Еда</button>
+          <button class="chip" onclick="setCat(this,'other')">Другое</button>
+        </div>
+      </div>
+      <div>
+        <div class="sb-title">Сортировка</div>
+        <div class="sort-list">
+          <div class="sort-row">
+            <label>По дате</label>
+            <select id="sort-date" onchange="applyFilters()">
+              <option value="new" selected>Сначала новые</option>
+              <option value="old">Сначала старые</option>
+            </select>
+          </div>
+          <div class="sort-row">
+            <label>По цене</label>
+            <select id="sort-price" onchange="applyFilters()">
+              <option value="" selected>Без сортировки</option>
+              <option value="asc">Сначала дешевле</option>
+              <option value="desc">Сначала дороже</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sb-title">Диапазон цены, ₽</div>
+        <div class="price-inputs">
+          <input type="number" id="price-from" placeholder="От" min="0" max="10000" step="100" oninput="syncFromInput()">
+          <span class="price-sep">—</span>
+          <input type="number" id="price-to" placeholder="До" min="0" max="10000" step="100" oninput="syncToInput()">
+        </div>
+        <div class="range-wrap">
+          <div class="range-track"></div>
+          <div class="range-fill" id="range-fill"></div>
+          <input type="range" id="range-min" min="0" max="10000" step="100" value="0" oninput="syncRangeMin()">
+          <input type="range" id="range-max" min="0" max="10000" step="100" value="10000" oninput="syncRangeMax()">
+        </div>
+        <div class="price-labels"><span>0 ₽</span><span>10 000 ₽</span></div>
+      </div>
+      <button class="sb-reset" onclick="resetAll()">Сбросить фильтры</button>
+    </aside>
+
+    <div class="main">
+      <div class="toolbar">
+        <span class="count" id="count-label"></span>
+        <div class="active-filters" id="active-filters"></div>
+      </div>
+      <div class="grid" id="grid">
+
+        <div class="card" data-cat="electronics" data-type="sell" data-price="3500" data-date="5" data-title="наушники sony wh-1000xm4">
+          <div class="card-img">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="2"/></svg>
+            <span class="type-badge" style="background:#EEEDFE;color:#3C3489">Продам</span>
+          </div>
+          <div class="card-body">
+            <div class="card-cat">Электроника</div>
+            <div class="card-title">Наушники Sony WH-1000XM4</div>
+            <div class="card-price">3 500 ₽</div>
+            <div class="card-meta">
+              <div class="card-author"><div class="avatar-xs" style="background:#EEEDFE;color:#3C3489">АК</div><span class="card-author-name">Алина К.</span></div>
+              <span class="card-date">сегодня</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="study" data-type="sell" data-price="0" data-date="4" data-title="конспекты по высшей математике 1 курс">
+          <div class="card-img">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="2"/></svg>
+            <span class="type-badge" style="background:#E1F5EE;color:#085041">Продам</span>
+          </div>
+          <div class="card-body">
+            <div class="card-cat">Учёба</div>
+            <div class="card-title">Конспекты по высшей математике</div>
+            <div class="card-price free">Бесплатно</div>
+            <div class="card-meta">
+              <div class="card-author"><div class="avatar-xs" style="background:#E1F5EE;color:#085041">ДМ</div><span class="card-author-name">Дима М.</span></div>
+              <span class="card-date">вчера</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="services" data-type="service_offer" data-price="300" data-date="3" data-title="репетитор по физике помогу с лабами">
+          <div class="card-img">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="2"/></svg>
+            <span class="type-badge" style="background:#FAEEDA;color:#633806">Услуга</span>
+          </div>
+          <div class="card-body">
+            <div class="card-cat">Услуги</div>
+            <div class="card-title">Репетитор по физике, помогу с лабами</div>
+            <div class="card-price">300 ₽/час</div>
+            <div class="card-meta">
+              <div class="card-author"><div class="avatar-xs" style="background:#FAEEDA;color:#633806">СП</div><span class="card-author-name">Сергей П.</span></div>
+              <span class="card-date">2 дня назад</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="clothes" data-type="sell" data-price="1200" data-date="2" data-title="зимняя куртка размер m почти новая">
+          <div class="card-img">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="2"/></svg>
+            <span class="type-badge" style="background:#EEEDFE;color:#3C3489">Продам</span>
+          </div>
+          <div class="card-body">
+            <div class="card-cat">Вещи / одежда</div>
+            <div class="card-title">Зимняя куртка, размер M, почти новая</div>
+            <div class="card-price">1 200 ₽</div>
+            <div class="card-meta">
+              <div class="card-author"><div class="avatar-xs" style="background:#EEEDFE;color:#3C3489">МН</div><span class="card-author-name">Маша Н.</span></div>
+              <span class="card-date">3 дня назад</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="food" data-type="sell" data-price="250" data-date="5" data-title="домашние пирожки 10 штук">
+          <div class="card-img">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="2"/></svg>
+            <span class="type-badge" style="background:#E1F5EE;color:#085041">Продам</span>
+          </div>
+          <div class="card-body">
+            <div class="card-cat">Еда</div>
+            <div class="card-title">Домашние пирожки, 10 штук</div>
+            <div class="card-price">250 ₽</div>
+            <div class="card-meta">
+              <div class="card-author"><div class="avatar-xs" style="background:#E1F5EE;color:#085041">ОВ</div><span class="card-author-name">Оля В.</span></div>
+              <span class="card-date">сегодня</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="other" data-type="rent" data-price="500" data-date="1" data-title="велосипед в аренду на выходные">
+          <div class="card-img">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8" cy="14" r="2"/></svg>
+            <span class="type-badge" style="background:#E6F1FB;color:#0C447C">Аренда</span>
+          </div>
+          <div class="card-body">
+            <div class="card-cat">Другое</div>
+            <div class="card-title">Велосипед в аренду на выходные</div>
+            <div class="card-price">500 ₽/день</div>
+            <div class="card-meta">
+              <div class="card-author"><div class="avatar-xs" style="background:#E6F1FB;color:#0C447C">ИС</div><span class="card-author-name">Иван С.</span></div>
+              <span class="card-date">4 дня назад</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const MAX = 10000;
+let activeCat = '';
+
+function setCat(el, cat) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  activeCat = cat;
+  applyFilters();
+}
+
+function syncRangeMin() {
+  const mn = document.getElementById('range-min');
+  const mx = document.getElementById('range-max');
+  if (parseInt(mn.value) > parseInt(mx.value)) mn.value = mx.value;
+  document.getElementById('price-from').value = mn.value > 0 ? mn.value : '';
+  updateFill(); applyFilters();
+}
+function syncRangeMax() {
+  const mn = document.getElementById('range-min');
+  const mx = document.getElementById('range-max');
+  if (parseInt(mx.value) < parseInt(mn.value)) mx.value = mn.value;
+  document.getElementById('price-to').value = mx.value < MAX ? mx.value : '';
+  updateFill(); applyFilters();
+}
+function syncFromInput() {
+  const v = Math.min(parseInt(document.getElementById('price-from').value) || 0, MAX);
+  document.getElementById('range-min').value = v;
+  updateFill(); applyFilters();
+}
+function syncToInput() {
+  const v = Math.min(parseInt(document.getElementById('price-to').value) || MAX, MAX);
+  document.getElementById('range-max').value = v;
+  updateFill(); applyFilters();
+}
+function updateFill() {
+  const mn = parseInt(document.getElementById('range-min').value);
+  const mx = parseInt(document.getElementById('range-max').value);
+  document.getElementById('range-fill').style.left  = (mn / MAX * 100) + '%';
+  document.getElementById('range-fill').style.right = ((MAX - mx) / MAX * 100) + '%';
+}
+
+function applyFilters() {
+  const typeVal   = document.getElementById('type-sel').value;
+  const dateSort  = document.getElementById('sort-date').value;
+  const priceSort = document.getElementById('sort-price').value;
+  const mn    = parseInt(document.getElementById('range-min').value);
+  const mx    = parseInt(document.getElementById('range-max').value);
+  const query = document.getElementById('search-input').value.trim().toLowerCase();
+
+  document.getElementById('sort-price').classList.toggle('on', priceSort !== '');
+  document.getElementById('sort-date').classList.toggle('on', dateSort === 'old');
+
+  const grid  = document.getElementById('grid');
+  const cards = Array.from(grid.querySelectorAll('.card'));
+
+  cards.forEach(c => {
+    const price    = parseFloat(c.dataset.price);
+    const catOk    = !activeCat || c.dataset.cat  === activeCat;
+    const typeOk   = !typeVal   || c.dataset.type === typeVal;
+    const priceOk  = price >= mn && price <= mx;
+    const searchOk = !query     || c.dataset.title.includes(query);
+    c.style.display = (catOk && typeOk && priceOk && searchOk) ? '' : 'none';
+  });
+
+  const visible = cards.filter(c => c.style.display !== 'none');
+
+  visible.sort((a, b) => {
+    const pa = parseFloat(a.dataset.price), pb = parseFloat(b.dataset.price);
+    const da = parseInt(a.dataset.date),    db = parseInt(b.dataset.date);
+    if (priceSort === 'asc'  && pa !== pb) return pa - pb;
+    if (priceSort === 'desc' && pa !== pb) return pb - pa;
+    return dateSort === 'old' ? da - db : db - da;
+  });
+  visible.forEach(c => grid.appendChild(c));
+
+  const existing = document.getElementById('empty-state');
+  if (visible.length === 0) {
+    if (!existing) {
+      const el = document.createElement('div');
+      el.id = 'empty-state'; el.className = 'empty';
+      el.textContent = 'По вашему запросу ничего не найдено';
+      grid.appendChild(el);
+    }
+  } else {
+    if (existing) existing.remove();
+  }
+
+  document.getElementById('count-label').textContent = visible.length + ' объявлений';
+
+  const tags = [];
+  if (activeCat) tags.push(document.querySelector('.chip.active')?.textContent.trim() || activeCat);
+  if (typeVal)   tags.push(document.getElementById('type-sel').selectedOptions[0].text);
+  if (mn > 0 || mx < MAX) tags.push('от ' + mn.toLocaleString() + ' до ' + mx.toLocaleString() + ' ₽');
+  if (query)     tags.push('"' + query + '"');
+
+  document.getElementById('active-filters').innerHTML = tags.map(t =>
+    `<span class="filter-tag">${t}<button onclick="resetAll()">×</button></span>`
+  ).join('');
+}
+
+function resetAll() {
+  activeCat = '';
+  document.querySelectorAll('.chip').forEach((c, i) => c.classList.toggle('active', i === 0));
+  document.getElementById('type-sel').value     = '';
+  document.getElementById('sort-date').value    = 'new';
+  document.getElementById('sort-price').value   = '';
+  document.getElementById('range-min').value    = 0;
+  document.getElementById('range-max').value    = MAX;
+  document.getElementById('price-from').value   = '';
+  document.getElementById('price-to').value     = '';
+  document.getElementById('search-input').value = '';
+  updateFill();
+  applyFilters();
+}
+
+updateFill();
+applyFilters();
+</script>
+</body>
+</html>
